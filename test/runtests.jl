@@ -5,7 +5,7 @@ using JET
 using JuliaFormatter
 using Test
 
-@testset "DifferentiableFrankWolfe.jl" begin
+@testset verbose = true "DifferentiableFrankWolfe.jl" begin
     @testset verbose = false "Code quality (Aqua.jl)" begin
         Aqua.test_all(DifferentiableFrankWolfe; ambiguities=false)
     end
@@ -19,5 +19,8 @@ using Test
     end
     @testset verbose = false "Doctests (Documenter.jl)" begin
         doctest(DifferentiableFrankWolfe)
+    end
+    @testset verbose = true "DiffFW" begin
+        include("difffw.jl")
     end
 end

@@ -1,3 +1,5 @@
 [deps]
+ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
 DifferentiableFrankWolfe = "b383313e-5450-4164-a800-befbd27b574d"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+ImplicitDifferentiation = "57b37032-215b-411a-8a7c-41a003a55207"
