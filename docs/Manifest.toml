@@ -148,7 +148,7 @@ uuid = "b552c78f-8df3-52c6-915a-8e097449b14b"
 version = "1.13.0"
 
 [[deps.DifferentiableFrankWolfe]]
-deps = ["FrankWolfe", "ImplicitDifferentiation"]
+deps = ["ChainRulesCore", "FrankWolfe", "ImplicitDifferentiation", "LinearAlgebra"]
 path = ".."
 uuid = "b383313e-5450-4164-a800-befbd27b574d"
 version = "0.1.0"
@@ -229,9 +229,9 @@ version = "0.2.2"
 
 [[deps.ImplicitDifferentiation]]
 deps = ["AbstractDifferentiation", "Krylov", "LinearOperators", "Requires"]
-git-tree-sha1 = "a8c41c1e5b7896096a0210b903015cf87540801b"
+git-tree-sha1 = "fa3fa5fce87fd91ff833636036977c2b16e62e4f"
 repo-rev = "more_stuff"
-repo-url = "https://github.com/gdalle/ImplicitDifferentiation.jl/"
+repo-url = "https://github.com/gdalle/ImplicitDifferentiation.jl"
 uuid = "57b37032-215b-411a-8a7c-41a003a55207"
 version = "0.4.0"
 weakdeps = ["ChainRulesCore", "ForwardDiff"]
