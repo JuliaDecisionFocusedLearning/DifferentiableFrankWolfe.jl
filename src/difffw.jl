@@ -1,12 +1,13 @@
 """
-    ForwardFW{F,G,M}
+    ForwardFW{F,G,M,A}
 
-Underlying solver for [`DiffFW`](@ref), which relies on `FrankWolfe.away_frank_wolfe`.
+Underlying solver for [`DiffFW`](@ref), which relies on a variant of Frank-Wolfe.
 """
-struct ForwardFW{F,G,M}
+struct ForwardFW{F,G,M,A}
     f::F
     f_grad1::G
     lmo::M
+    alg::A
 end
 
 """
@@ -19,7 +20,7 @@ struct ConditionsFW{G}
 end
 
 """
-    DiffFW{F,G,M,I}
+    DiffFW{F,G,M,A,I}
 
 Callable parametrized wrapper for the Frank-Wolfe algorithm `θ -> argmin_{x ∈ C} f(x, θ)`, which can be differentiated implicitly wrt `θ`.
 
@@ -29,20 +30,22 @@ Reference: <https://arxiv.org/abs/2105.15183> (especially section 2 and the end 
 - `f::F`: function `f(x, θ)` to minimize wrt `x`
 - `f_grad1::G`: gradient `∇ₓf(x, θ)` of `f` wrt `x`
 - `lmo::M`: linear minimization oracle `θ -> argmin_{x ∈ C} θᵀx`, implicitly defines the convex set `C`
+- `alg::A`: Frank-Wolfe variante used, defaults to `away_frank_wolfe`
 - `implicit::I`: implicit function constructed from the previous fields
 """
-struct DiffFW{F,G,M<:LinearMinimizationOracle,I<:ImplicitFunction}
+struct DiffFW{F,G,M<:LinearMinimizationOracle,A,I<:ImplicitFunction}
     f::F
     f_grad1::G
     lmo::M
+    alg::A
     implicit::I
 end
 
-function DiffFW(f, f_grad1, lmo)
-    forward = ForwardFW(f, f_grad1, lmo)
+function DiffFW(f, f_grad1, lmo, alg=away_frank_wolfe)
+    forward = ForwardFW(f, f_grad1, lmo, alg)
     conditions = ConditionsFW(f_grad1)
     implicit = ImplicitFunction(forward, conditions)
-    return DiffFW(f, f_grad1, lmo, implicit)
+    return DiffFW(f, f_grad1, lmo, alg, implicit)
 end
 
 """
@@ -56,11 +59,11 @@ function (dfw::DiffFW)(θ::AbstractArray{<:Real}; kwargs...)
 end
 
 function (forward::ForwardFW)(θ::AbstractArray{<:Real}; frank_wolfe_kwargs=(;), kwargs...)
-    f, f_grad1, lmo = forward.f, forward.f_grad1, forward.lmo
+    f, f_grad1, lmo, alg = forward.f, forward.f_grad1, forward.lmo, forward.alg
     obj(x) = f(x, θ)
     grad!(g, x) = g .= f_grad1(x, θ)
     x0 = compute_extreme_point(lmo, θ)
-    x, v, primal, dual_gap, traj_data, active_set = away_frank_wolfe(
+    x, v, primal, dual_gap, traj_data, active_set = alg(
         obj, grad!, lmo, x0; frank_wolfe_kwargs...
     )
     p, V = active_set.weights, active_set.atoms
