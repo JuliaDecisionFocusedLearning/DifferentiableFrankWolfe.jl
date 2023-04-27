@@ -1,7 +1,12 @@
 using DifferentiableFrankWolfe
 using Documenter
 
-DocMeta.setdocmeta!(DifferentiableFrankWolfe, :DocTestSetup, :(using DifferentiableFrankWolfe); recursive=true)
+DocMeta.setdocmeta!(
+    DifferentiableFrankWolfe,
+    :DocTestSetup,
+    :(using DifferentiableFrankWolfe);
+    recursive=true,
+)
 
 makedocs(;
     modules=[DifferentiableFrankWolfe],
@@ -14,12 +19,7 @@ makedocs(;
         edit_link="main",
         assets=String[],
     ),
-    pages=[
-        "Home" => "index.md",
-    ],
+    pages=["Home" => "index.md"],
 )
 
-deploydocs(;
-    repo="github.com/gdalle/DifferentiableFrankWolfe.jl",
-    devbranch="main",
-)
+deploydocs(; repo="github.com/gdalle/DifferentiableFrankWolfe.jl", devbranch="main")

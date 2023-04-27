@@ -1,13 +1,25 @@
 name = "DifferentiableFrankWolfe"
 uuid = "b383313e-5450-4164-a800-befbd27b574d"
 authors = ["Guillaume Dalle <22795598+gdalle@users.noreply.github.com> and contributors"]
-version = "1.0.0-DEV"
+version = "0.1.0"
+
+[deps]
+FrankWolfe = "f55ce6ea-fdc5-4628-88c5-0087fe54bd30"
+ImplicitDifferentiation = "57b37032-215b-411a-8a7c-41a003a55207"
 
 [compat]
-julia = "1.7"
+FrankWolfe = "0.2"
+ImplicitDifferentiation = "0.4"
+julia = "1.9"
 
 [extras]
+Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
+JET = "c3a54625-cd67-489e-a8e7-0a5a0ff4e31b"
+JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+Zygote = "e88e6eb3-aa80-5325-afca-941959d7151f"
 
 [targets]
-test = ["Test"]
+test = ["Aqua", "Documenter", "ForwardDiff", "JET", "JuliaFormatter", "Test", "Zygote"]
