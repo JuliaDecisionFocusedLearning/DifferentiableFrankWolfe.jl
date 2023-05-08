@@ -17,9 +17,7 @@ using Test
             JET.test_package(DifferentiableFrankWolfe; toplevel_logger=nothing)
         end
     end
-    @testset verbose = false "Doctests (Documenter.jl)" begin
-        doctest(DifferentiableFrankWolfe)
-    end
+    doctest(DifferentiableFrankWolfe)
     @testset verbose = true "DiffFW" begin
         include("difffw.jl")
     end

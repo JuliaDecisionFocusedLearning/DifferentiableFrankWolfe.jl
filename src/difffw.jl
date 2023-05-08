@@ -58,7 +58,9 @@ function (dfw::DiffFW)(θ::AbstractArray{<:Real}; kwargs...)
     return sum(pᵢ * Vᵢ for (pᵢ, Vᵢ) in zip(p, V))
 end
 
-function (forward::ForwardFW)(θ::AbstractArray{<:Real}; frank_wolfe_kwargs=(;), kwargs...)
+function (forward::ForwardFW)(
+    θ::AbstractArray{<:Real}; frank_wolfe_kwargs=NamedTuple(), kwargs...
+)
     f, f_grad1, lmo, alg = forward.f, forward.f_grad1, forward.lmo, forward.alg
     obj(x) = f(x, θ)
     grad!(g, x) = g .= f_grad1(x, θ)
