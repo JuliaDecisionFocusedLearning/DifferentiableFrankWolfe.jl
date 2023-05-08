@@ -20,6 +20,8 @@ makedocs(;
         assets=String[],
     ),
     pages=["Home" => "index.md"],
+    linkcheck=true,
+    strict=true,
 )
 
 deploydocs(; repo="github.com/gdalle/DifferentiableFrankWolfe.jl", devbranch="main")

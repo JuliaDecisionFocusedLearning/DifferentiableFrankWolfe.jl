@@ -13,7 +13,7 @@ end
 """
     ConditionsFW{F,G,M}
 
-Differentiable optimality conditions for [`DiffFW`](@ref), which rely on a custom [`sparse_argmax`](@ref) implementation.
+Differentiable optimality conditions for [`DiffFW`](@ref), which rely on a custom [`simplex_projection`](@ref) implementation.
 """
 struct ConditionsFW{G}
     f_grad1::G
@@ -41,6 +41,11 @@ struct DiffFW{F,G,M<:LinearMinimizationOracle,A,I<:ImplicitFunction}
     implicit::I
 end
 
+"""
+    DiffFW(f, f_grad1, lmo[, alg=away_frank_wolfe])
+
+Constructor which chooses a default algorithm and creates the implicit function object.
+"""
 function DiffFW(f, f_grad1, lmo, alg=away_frank_wolfe)
     forward = ForwardFW(f, f_grad1, lmo, alg)
     conditions = ConditionsFW(f_grad1)
