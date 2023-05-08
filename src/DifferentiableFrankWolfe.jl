@@ -7,7 +7,7 @@ using LinearAlgebra: dot
 
 export DiffFW
 
-# include("simplex_projection.jl")
-# include("difffw.jl")
+include("simplex_projection.jl")
+include("difffw.jl")
 
 end
