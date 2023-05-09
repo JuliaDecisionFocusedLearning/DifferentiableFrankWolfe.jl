@@ -1,3 +1,8 @@
+"""
+    DifferentiableFrankWolfe
+
+Differentiable wrapper for [FrankWolfe.jl](https://github.com/ZIB-IOL/FrankWolfe.jl) convex optimization routines.
+"""
 module DifferentiableFrankWolfe
 
 using ChainRulesCore: ChainRulesCore, NoTangent

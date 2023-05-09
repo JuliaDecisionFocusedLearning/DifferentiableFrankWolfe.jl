@@ -4,11 +4,20 @@ CurrentModule = DifferentiableFrankWolfe
 
 # DifferentiableFrankWolfe
 
-Documentation for [DifferentiableFrankWolfe](https://github.com/gdalle/DifferentiableFrankWolfe.jl).
+Documentation for [DifferentiableFrankWolfe.jl](https://github.com/gdalle/DifferentiableFrankWolfe.jl).
+
+## Index
 
 ```@index
 ```
 
-```@autodocs
-Modules = [DifferentiableFrankWolfe]
+## API reference
+
+```@docs
+DifferentiableFrankWolfe
+DiffFW
+simplex_projection
+simplex_projection_and_support
+ForwardFW
+ConditionsFW
 ```

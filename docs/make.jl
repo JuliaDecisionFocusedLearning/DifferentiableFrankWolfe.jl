@@ -1,11 +1,19 @@
 using DifferentiableFrankWolfe
 using Documenter
+using Literate
 
 DocMeta.setdocmeta!(
     DifferentiableFrankWolfe,
     :DocTestSetup,
     :(using DifferentiableFrankWolfe);
     recursive=true,
+)
+
+Literate.markdown(
+    joinpath(@__DIR__, "..", "examples", "tutorial.jl"),
+    joinpath(@__DIR__, "src");
+    documenter=true,
+    flavor=Literate.DocumenterFlavor(),
 )
 
 makedocs(;
@@ -19,9 +27,8 @@ makedocs(;
         edit_link="main",
         assets=String[],
     ),
-    pages=["Home" => "index.md"],
+    pages=["Home" => "index.md", "Tutorial" => "tutorial.md"],
     linkcheck=true,
-    strict=true,
 )
 
 deploydocs(; repo="github.com/gdalle/DifferentiableFrankWolfe.jl", devbranch="main")

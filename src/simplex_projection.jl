@@ -3,6 +3,8 @@
 
 Compute the Euclidean projection of the vector `z` onto the probability simplex.
 
+This function is differentiable thanks to a custom chain rule.
+
 Reference: <https://arxiv.org/abs/1602.02068>.
 """
 function simplex_projection(z::AbstractVector{<:Real}; kwargs...)
@@ -13,7 +15,7 @@ end
 """
     simplex_projection_and_support(z)
 
-Compute the Euclidean projection `p` of `z` on the probability simplex and the indicators `s` of its support.
+Compute the Euclidean projection `p` of `z` on the probability simplex as well as the indicators `s` of its support, which are useful for differentiation.
 
 Reference: <https://arxiv.org/abs/1602.02068>.
 """
