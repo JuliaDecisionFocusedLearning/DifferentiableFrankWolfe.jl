@@ -16,8 +16,8 @@ using Zygote
     end
 
     @testset "Correctness (JET.jl)" begin
-        if VERSION >= v"1.8"
-            JET.test_package(DifferentiableFrankWolfe; toplevel_logger=nothing, mode=:typo)
+        if VERSION >= v"1.9"
+            JET.test_package(DifferentiableFrankWolfe; target_defined_modules=true)
         end
     end
 

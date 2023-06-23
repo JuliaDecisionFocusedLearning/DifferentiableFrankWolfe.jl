@@ -3,9 +3,10 @@
 # Necessary imports
 
 using DifferentiableFrankWolfe: DiffFW, simplex_projection
+using ForwardDiff: ForwardDiff
 using FrankWolfe: UnitSimplexOracle
 using Test: @test
-using Zygote: jacobian
+using Zygote: Zygote
 
 # Constructing the wrapper
 
@@ -25,6 +26,10 @@ y_true = simplex_projection(θ)
 
 # Differentiating the wrapper
 
-J = jacobian(_θ -> dfw(_θ; frank_wolfe_kwargs), θ)[1]
-J_true = jacobian(simplex_projection, θ)[1]
-@test J ≈ J_true atol = 1e-3
+J1 = Zygote.jacobian(_θ -> dfw(_θ; frank_wolfe_kwargs), θ)[1]
+J1_true = Zygote.jacobian(simplex_projection, θ)[1]
+@test J1 ≈ J1_true atol = 1e-3
+
+J2 = ForwardDiff.jacobian(_θ -> dfw(_θ; frank_wolfe_kwargs), θ)
+J2_true = ForwardDiff.jacobian(simplex_projection, θ)
+@test J2 ≈ J2_true atol = 1e-3
