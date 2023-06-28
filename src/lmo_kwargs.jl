@@ -40,8 +40,7 @@ end
 function FrankWolfe.compute_extreme_point(
     lmokw::LinearMinimizationOracleWithKwargs, direction; kwargs...
 )
-    (; minimizer, minimizer_kwargs) = lmokw
-    v = minimizer(direction; minimizer_kwargs...)
+    v = lmokw.minimizer(direction; lmokw.minimizer_kwargs...)
     return v
 end
 
@@ -51,8 +50,7 @@ end
 function FrankWolfe.compute_extreme_point(
     lmokw::LinearMaximizationOracleWithKwargs, direction; kwargs...
 )
-    (; maximizer, maximizer_kwargs) = lmokw
     opposite_direction = -direction
-    v = maximizer(opposite_direction; maximizer_kwargs...)
+    v = lmokw.maximizer(opposite_direction; lmokw.maximizer_kwargs...)
     return v
 end
