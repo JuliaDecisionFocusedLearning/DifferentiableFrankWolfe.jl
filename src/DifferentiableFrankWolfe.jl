@@ -8,7 +8,7 @@ module DifferentiableFrankWolfe
 using ChainRulesCore: ChainRulesCore, NoTangent
 using FrankWolfe: FrankWolfe, LinearMinimizationOracle
 using FrankWolfe: away_frank_wolfe, compute_extreme_point
-using ImplicitDifferentiation: ImplicitFunction
+using ImplicitDifferentiation: ImplicitFunction, IterativeLinearSolver
 using LinearAlgebra: dot
 
 export DiffFW

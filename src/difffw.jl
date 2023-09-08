@@ -52,6 +52,16 @@ Constructor which chooses a default algorithm and creates the implicit function 
 function DiffFW(f, f_grad1, lmo; alg=away_frank_wolfe, implicit_kwargs=NamedTuple())
     forward = ForwardFW(f, f_grad1, lmo, alg)
     conditions = ConditionsFW(f_grad1)
+    if !haskey(implicit_kwargs, :linear_solver)
+        implicit_kwargs = merge(
+            implicit_kwargs,
+            (;
+                linear_solver=IterativeLinearSolver(;
+                    verbose=true, accept_inconsistent=true
+                )
+            ),
+        )
+    end
     implicit = ImplicitFunction(forward, conditions; implicit_kwargs...)
     return DiffFW(f, f_grad1, lmo, alg, implicit)
 end
