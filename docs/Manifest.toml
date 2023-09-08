@@ -195,7 +195,7 @@ version = "1.15.1"
 deps = ["ChainRulesCore", "FrankWolfe", "ImplicitDifferentiation", "LinearAlgebra"]
 path = ".."
 uuid = "b383313e-5450-4164-a800-befbd27b574d"
-version = "0.1.4"
+version = "0.2.0"
 
 [[deps.Distributed]]
 deps = ["Random", "Serialization", "Sockets"]
@@ -301,15 +301,22 @@ uuid = "7869d1d1-7146-5819-86e3-90919afe41df"
 version = "0.4.10"
 
 [[deps.ImplicitDifferentiation]]
-deps = ["AbstractDifferentiation", "Krylov", "LinearOperators", "Requires"]
-git-tree-sha1 = "60dd9979c0dcbbb77404e47ae4f83ca98e51c73b"
+deps = ["AbstractDifferentiation", "Krylov", "LinearAlgebra", "LinearOperators", "PrecompileTools", "Requires", "SimpleUnPack"]
+git-tree-sha1 = "10e2462a420fcbf4c69425429544ef754630d8a2"
 uuid = "57b37032-215b-411a-8a7c-41a003a55207"
-version = "0.4.4"
-weakdeps = ["ChainRulesCore", "ForwardDiff"]
+version = "0.5.0"
 
     [deps.ImplicitDifferentiation.extensions]
-    ImplicitDifferentiationChainRulesExt = "ChainRulesCore"
+    ImplicitDifferentiationChainRulesCoreExt = "ChainRulesCore"
     ImplicitDifferentiationForwardDiffExt = "ForwardDiff"
+    ImplicitDifferentiationStaticArraysExt = "StaticArrays"
+    ImplicitDifferentiationZygoteExt = "Zygote"
+
+    [deps.ImplicitDifferentiation.weakdeps]
+    ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
+    ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
+    StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+    Zygote = "e88e6eb3-aa80-5325-afca-941959d7151f"
 
 [[deps.InteractiveUtils]]
 deps = ["Markdown"]
@@ -561,6 +568,11 @@ deps = ["ConstructionBase", "Future", "MacroTools", "StaticArraysCore"]
 git-tree-sha1 = "e2cc6d8c88613c05e1defb55170bf5ff211fbeac"
 uuid = "efcf1570-3423-57d1-acb7-fd33fddbac46"
 version = "1.1.1"
+
+[[deps.SimpleUnPack]]
+git-tree-sha1 = "58e6353e72cde29b90a69527e56df1b5c3d8c437"
+uuid = "ce78b400-467f-4804-87d8-8f486da07d0a"
+version = "1.1.0"
 
 [[deps.Sockets]]
 uuid = "6462fe0b-24de-5631-8697-dd941f90decc"
