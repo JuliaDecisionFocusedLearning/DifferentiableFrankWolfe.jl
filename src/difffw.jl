@@ -45,14 +45,14 @@ struct DiffFW{F,G,M<:LinearMinimizationOracle,A,I<:ImplicitFunction}
 end
 
 """
-    DiffFW(f, f_grad1, lmo[, alg=away_frank_wolfe])
+    DiffFW(f, f_grad1, lmo[; alg=away_frank_wolfe, implicit_kwargs=(;)])
 
 Constructor which chooses a default algorithm and creates the implicit function automatically.
 """
-function DiffFW(f, f_grad1, lmo, alg=away_frank_wolfe)
+function DiffFW(f, f_grad1, lmo; alg=away_frank_wolfe, implicit_kwargs=NamedTuple())
     forward = ForwardFW(f, f_grad1, lmo, alg)
     conditions = ConditionsFW(f_grad1)
-    implicit = ImplicitFunction(forward, conditions)
+    implicit = ImplicitFunction(forward, conditions; implicit_kwargs...)
     return DiffFW(f, f_grad1, lmo, alg, implicit)
 end
 
