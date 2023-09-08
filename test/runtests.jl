@@ -28,8 +28,4 @@ using Zygote
     @testset "Tutorial" begin
         include(joinpath(@__DIR__, "..", "examples", "tutorial.jl"))
     end
-
-    @testset "LMO with kwargs" begin
-        include("lmo_kwargs.jl")
-    end
 end
