@@ -1,6 +1,7 @@
 using Aqua
 using DifferentiableFrankWolfe
 using Documenter
+using ImplicitDifferentiation
 using JET
 using JuliaFormatter
 using Test
@@ -27,5 +28,16 @@ using Zygote
 
     @testset "Tutorial" begin
         include(joinpath(@__DIR__, "..", "examples", "tutorial.jl"))
+    end
+
+    @testset "Constructor" begin
+        dfw1 = DiffFW(f, f_grad1, lmo)
+        @test !dfw1.implicit.linear_solver.accept_inconsistent
+
+        implicit_kwargs = (;
+            linear_solver=IterativeLinearSolver(; accept_inconsistent=true)
+        )
+        dfw2 = DiffFW(f, f_grad1, lmo; implicit_kwargs)
+        @test dfw2.implicit.linear_solver.accept_inconsistent
     end
 end
