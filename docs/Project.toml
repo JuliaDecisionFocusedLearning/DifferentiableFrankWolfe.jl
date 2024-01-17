@@ -1,6 +1,10 @@
 [deps]
 DifferentiableFrankWolfe = "b383313e-5450-4164-a800-befbd27b574d"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
 FrankWolfe = "f55ce6ea-fdc5-4628-88c5-0087fe54bd30"
 Literate = "98b081ad-f1c9-55d3-8b20-4c87d4299306"
 Zygote = "e88e6eb3-aa80-5325-afca-941959d7151f"
+
+[compat]
+Documenter = "1"
