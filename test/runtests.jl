@@ -9,7 +9,9 @@ using Zygote
 
 @testset verbose = true "DifferentiableFrankWolfe.jl" begin
     @testset "Quality (Aqua.jl)" begin
-        Aqua.test_all(DifferentiableFrankWolfe; ambiguities=false)
+        Aqua.test_all(
+            DifferentiableFrankWolfe; ambiguities=false, deps_compat=(check_extras=false,)
+        )
     end
 
     @testset "Formatting (JuliaFormatter.jl)" begin

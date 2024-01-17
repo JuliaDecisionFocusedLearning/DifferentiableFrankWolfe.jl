@@ -24,8 +24,6 @@ end
 
 Callable parametrized wrapper for the Frank-Wolfe algorithm `θ -> argmin_{x ∈ C} f(x, θ)`, which can be differentiated implicitly wrt `θ`.
 
-The automatic differentiation backend must be compatible with [ChainRules.jl](https://github.com/JuliaDiff/ChainRules.jl) (for instance [Zygote.jl](https://github.com/FluxML/Zygote.jl)).
-
 Reference: <https://arxiv.org/abs/2105.15183> (section 2 + end of appendix A).
 
 # Fields

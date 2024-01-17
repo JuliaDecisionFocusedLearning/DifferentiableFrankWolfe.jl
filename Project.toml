@@ -1,7 +1,7 @@
 name = "DifferentiableFrankWolfe"
 uuid = "b383313e-5450-4164-a800-befbd27b574d"
-authors = ["Guillaume Dalle <22795598+gdalle@users.noreply.github.com> and contributors"]
-version = "0.2.0"
+authors = ["Guillaume Dalle"]
+version = "0.2.1"
 
 [deps]
 ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
@@ -11,7 +11,7 @@ LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 
 [compat]
 ChainRulesCore = "1.15"
-FrankWolfe = "0.2, 0.3"
+FrankWolfe = "0.3"
 ImplicitDifferentiation = "0.5"
 julia = "1.6"
 
