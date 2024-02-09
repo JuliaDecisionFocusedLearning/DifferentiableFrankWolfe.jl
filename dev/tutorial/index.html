@@ -7,24 +7,24 @@ using Zygote: Zygote</code></pre><p>Constructing the wrapper</p><pre><code class
 f_grad1(x, θ) = x - θ
 lmo = UnitSimplexOracle(1.0)  # ... to the probability simplex
 dfw = DiffFW(f, f_grad1, lmo);  # ... is equivalent to a simplex projection</code></pre><p>Calling the wrapper</p><pre><code class="language-julia hljs">θ = rand(10)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">10-element Vector{Float64}:
- 0.564219129500644
- 0.020370329821667088
- 0.6735133667213831
- 0.2693723298349705
- 0.7224879237779909
- 0.35225544168087275
- 0.9428980384724903
- 0.9868243624311759
- 0.993421734090934
- 0.5546581717208099</code></pre><pre><code class="language-julia hljs">frank_wolfe_kwargs = (max_iteration=100, epsilon=1e-4)
+ 0.6176783224453943
+ 0.8313339664671373
+ 0.3936314833708211
+ 0.8646374443049056
+ 0.3718559293252447
+ 0.22218102321913524
+ 0.1975747606332775
+ 0.6626609542964412
+ 0.95232327656428
+ 0.34887380424457015</code></pre><pre><code class="language-julia hljs">frank_wolfe_kwargs = (max_iteration=100, epsilon=1e-4)
 y = dfw(θ; frank_wolfe_kwargs)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">10-element SparseArrays.SparseVector{Float64, Int64} with 5 stored entries:
-  [3]  =  0.00964747
-  [5]  =  0.0586513
-  [7]  =  0.279165
-  [8]  =  0.322958
-  [9]  =  0.329578</code></pre><pre><code class="language-julia hljs">y_true = simplex_projection(θ)
+  [1]  =  0.0318931
+  [2]  =  0.245704
+  [4]  =  0.278974
+  [8]  =  0.076871
+  [9]  =  0.366558</code></pre><pre><code class="language-julia hljs">y_true = simplex_projection(θ)
 @test Vector(y) ≈ Vector(y_true) atol = 1e-3</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr32"><span class="sgr1">Test Passed</span></span></code></pre><p>Differentiating the wrapper</p><pre><code class="language-julia hljs">J1 = Zygote.jacobian(_θ -&gt; dfw(_θ; frank_wolfe_kwargs), θ)[1]
 J1_true = Zygote.jacobian(simplex_projection, θ)[1]
 @test J1 ≈ J1_true atol = 1e-3</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr32"><span class="sgr1">Test Passed</span></span></code></pre><pre><code class="language-julia hljs">J2 = ForwardDiff.jacobian(_θ -&gt; dfw(_θ; frank_wolfe_kwargs), θ)
 J2_true = ForwardDiff.jacobian(simplex_projection, θ)
-@test J2 ≈ J2_true atol = 1e-3</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr32"><span class="sgr1">Test Passed</span></span></code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.2.1 on <span class="colophon-date" title="Monday 5 February 2024 08:47">Monday 5 February 2024</span>. Using Julia version 1.10.0.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+@test J2 ≈ J2_true atol = 1e-3</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr32"><span class="sgr1">Test Passed</span></span></code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.2.1 on <span class="colophon-date" title="Friday 9 February 2024 08:56">Friday 9 February 2024</span>. Using Julia version 1.10.0.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
