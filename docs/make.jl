@@ -21,9 +21,13 @@ makedocs(;
     authors="Guillaume Dalle",
     sitename="DifferentiableFrankWolfe.jl",
     format=Documenter.HTML(;
-        canonical="https://gdalle.github.io/DifferentiableFrankWolfe.jl", edit_link="main"
+        canonical="https://JuliaDecisionFocusedLearning.github.io/DifferentiableFrankWolfe.jl",
+        edit_link="main",
     ),
     pages=["Home" => "index.md", "Tutorial" => "tutorial.md"],
 )
 
-deploydocs(; repo="github.com/gdalle/DifferentiableFrankWolfe.jl", devbranch="main")
+deploydocs(;
+    repo="github.com/JuliaDecisionFocusedLearning/DifferentiableFrankWolfe.jl",
+    devbranch="main",
+)
