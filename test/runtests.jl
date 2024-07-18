@@ -19,9 +19,7 @@ using Zygote
     end
 
     @testset "Correctness (JET.jl)" begin
-        if VERSION >= v"1.9"
-            JET.test_package(DifferentiableFrankWolfe; target_defined_modules=true)
-        end
+        JET.test_package(DifferentiableFrankWolfe; target_defined_modules=true)
     end
 
     @testset "Doctests (Documenter.jl)" begin
@@ -34,12 +32,10 @@ using Zygote
 
     @testset "Constructor" begin
         dfw1 = DiffFW(f, f_grad1, lmo)
-        @test !dfw1.implicit.linear_solver.accept_inconsistent
+        @test dfw1.implicit.linear_solver != \
 
-        implicit_kwargs = (;
-            linear_solver=IterativeLinearSolver(; accept_inconsistent=true)
-        )
+        implicit_kwargs = (; linear_solver=\)
         dfw2 = DiffFW(f, f_grad1, lmo; implicit_kwargs)
-        @test dfw2.implicit.linear_solver.accept_inconsistent
+        @test dfw2.implicit.linear_solver == \
     end
 end

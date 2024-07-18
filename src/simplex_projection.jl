@@ -32,11 +32,13 @@ function simplex_projection_and_support(z::AbstractVector{<:Real})
 end
 
 function ChainRulesCore.rrule(::typeof(simplex_projection), z::AbstractVector{<:Real})
+    proj = ProjectTo(z)
     p, s = simplex_projection_and_support(z)
     S = sum(s)
-    function simplex_projection_pullback(dp)
+    function simplex_projection_pullback(dp_thunked)
+        dp = unthunk(dp_thunked)
         vjp = s .* (dp .- dot(dp, s) / S)
-        return (NoTangent(), vjp)
+        return (NoTangent(), proj(vjp))
     end
     return p, simplex_projection_pullback
 end

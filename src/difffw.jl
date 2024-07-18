@@ -55,17 +55,17 @@ function DiffFW(f, f_grad1, lmo; alg=away_frank_wolfe, implicit_kwargs=NamedTupl
 end
 
 """
-    dfw(θ; frank_wolfe_kwargs)
+    dfw(θ::AbstractVector; frank_wolfe_kwargs)
 
 Apply the Frank-Wolfe algorithm to `θ` with settings defined by `frank_wolfe_kwargs`.
 """
-function (dfw::DiffFW)(θ::AbstractArray{<:Real}; kwargs...)
+function (dfw::DiffFW)(θ::AbstractVector{<:Real}; kwargs...)
     p, V = dfw.implicit(θ; kwargs...)
     return sum(pᵢ * Vᵢ for (pᵢ, Vᵢ) in zip(p, V))
 end
 
 function (forward::ForwardFW)(
-    θ::AbstractArray{<:Real}; frank_wolfe_kwargs=NamedTuple(), kwargs...
+    θ::AbstractVector{<:Real}; frank_wolfe_kwargs=NamedTuple(), kwargs...
 )
     f, f_grad1, lmo, alg = forward.f, forward.f_grad1, forward.lmo, forward.alg
     obj(x) = f(x, θ)
@@ -79,9 +79,9 @@ function (forward::ForwardFW)(
 end
 
 function (conditions::ConditionsFW)(
-    θ::AbstractArray{<:Real},
+    θ::AbstractVector{<:Real},
     p::AbstractVector{<:Real},
-    V::AbstractVector{<:AbstractArray{<:Real}};
+    V::AbstractVector{<:AbstractVector{<:Real}};
     kwargs...,
 )
     f_grad1 = conditions.f_grad1
