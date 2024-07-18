@@ -5,15 +5,13 @@ Differentiable wrapper for [FrankWolfe.jl](https://github.com/ZIB-IOL/FrankWolfe
 """
 module DifferentiableFrankWolfe
 
-using ChainRulesCore: ChainRulesCore, NoTangent
+using ChainRulesCore: ChainRulesCore, NoTangent, ProjectTo, unthunk
 using FrankWolfe: FrankWolfe, LinearMinimizationOracle
 using FrankWolfe: away_frank_wolfe, compute_extreme_point
-using ImplicitDifferentiation: ImplicitFunction, IterativeLinearSolver
+using ImplicitDifferentiation: ImplicitFunction
 using LinearAlgebra: dot
 
 export DiffFW
-export LinearMinimizationOracle, compute_extreme_point  # from FrankWolfe
-export IterativeLinearSolver  # from ImplicitDifferentiation
 
 include("simplex_projection.jl")
 include("difffw.jl")
