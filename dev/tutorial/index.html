@@ -7,23 +7,24 @@ using Zygote: Zygote</code></pre><p>Constructing the wrapper</p><pre><code class
 f_grad1(x, θ) = x - θ
 lmo = UnitSimplexOracle(1.0)  # ... to the probability simplex
 dfw = DiffFW(f, f_grad1, lmo);  # ... is equivalent to a simplex projection</code></pre><p>Calling the wrapper</p><pre><code class="language-julia hljs">θ = rand(10)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">10-element Vector{Float64}:
- 0.6115211733519104
- 0.024178736812656476
- 0.12852497014837128
- 0.4458702502890224
- 0.5783821872190681
- 0.17405960204284932
- 0.9735972537898249
- 0.7723243905675385
- 0.3335234841568083
- 0.38172877964173046</code></pre><pre><code class="language-julia hljs">frank_wolfe_kwargs = (max_iteration=100, epsilon=1e-4)
-y = dfw(θ; frank_wolfe_kwargs)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">10-element SparseArrays.SparseVector{Float64, Int64} with 4 stored entries:
-  [1]  =  0.127624
-  [5]  =  0.0943717
-  [7]  =  0.489619
-  [8]  =  0.288385</code></pre><pre><code class="language-julia hljs">y_true = simplex_projection(θ)
+ 0.06355445935066106
+ 0.0012143414701077937
+ 0.6371496303471264
+ 0.967613367292252
+ 0.6929654452704908
+ 0.8062451680275365
+ 0.06710329407384397
+ 0.3670242696261734
+ 0.8607866174295836
+ 0.22215802975703658</code></pre><pre><code class="language-julia hljs">frank_wolfe_kwargs = (max_iteration=100, epsilon=1e-4)
+y = dfw(θ; frank_wolfe_kwargs)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">10-element SparseArrays.SparseVector{Float64, Int64} with 5 stored entries:
+  [3]  =  0.0441651
+  [4]  =  0.374611
+  [5]  =  0.0999539
+  [6]  =  0.213351
+  [9]  =  0.267919</code></pre><pre><code class="language-julia hljs">y_true = simplex_projection(θ)
 @test Vector(y) ≈ Vector(y_true) atol = 1e-3</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr32"><span class="sgr1">Test Passed</span></span></code></pre><p>Differentiating the wrapper</p><pre><code class="language-julia hljs">J1 = Zygote.jacobian(_θ -&gt; dfw(_θ; frank_wolfe_kwargs), θ)[1]
 J1_true = Zygote.jacobian(simplex_projection, θ)[1]
 @test J1 ≈ J1_true atol = 1e-3</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr32"><span class="sgr1">Test Passed</span></span></code></pre><pre><code class="language-julia hljs">J2 = ForwardDiff.jacobian(_θ -&gt; dfw(_θ; frank_wolfe_kwargs), θ)
 J2_true = ForwardDiff.jacobian(simplex_projection, θ)
-@test J2 ≈ J2_true atol = 1e-3</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr32"><span class="sgr1">Test Passed</span></span></code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.5.0 on <span class="colophon-date" title="Thursday 18 July 2024 14:19">Thursday 18 July 2024</span>. Using Julia version 1.10.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+@test J2 ≈ J2_true atol = 1e-3</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr32"><span class="sgr1">Test Passed</span></span></code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.8.0 on <span class="colophon-date" title="Monday 18 November 2024 10:26">Monday 18 November 2024</span>. Using Julia version 1.11.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
