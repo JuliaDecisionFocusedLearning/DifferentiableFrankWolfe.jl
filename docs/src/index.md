@@ -6,18 +6,16 @@ CurrentModule = DifferentiableFrankWolfe
 
 Documentation for [DifferentiableFrankWolfe.jl](https://github.com/gdalle/DifferentiableFrankWolfe.jl).
 
-## Index
+## Public API
 
-```@index
+```@autodocs
+Modules = [DifferentiableFrankWolfe]
+Private = false
 ```
 
-## API reference
+## Private API
 
-```@docs
-DifferentiableFrankWolfe
-DiffFW
-simplex_projection
-simplex_projection_and_support
-ForwardFW
-ConditionsFW
+```@autodocs
+Modules = [DifferentiableFrankWolfe]
+Public = false
 ```
