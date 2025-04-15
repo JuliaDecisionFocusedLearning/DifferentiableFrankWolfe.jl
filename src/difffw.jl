@@ -57,20 +57,20 @@ function DiffFW(
 end
 
 """
-    (dfw::DiffFW)(θ::AbstractVector, frank_wolfe_kwargs::NamedTuple)
+    (dfw::DiffFW)(θ::AbstractArray, frank_wolfe_kwargs::NamedTuple)
 
 Apply the Frank-Wolfe algorithm to `θ` with settings defined by the named tuple `frank_wolfe_kwargs` (given as a positional argument).
 
 Return a couple (x, stats) where `x` is the solution and `stats` is a named tuple containing additional information (its contents are not covered by public API, and mostly useful for debugging).
 """
-function (dfw::DiffFW)(θ::AbstractVector{<:Real}, frank_wolfe_kwargs=NamedTuple())
+function (dfw::DiffFW)(θ::AbstractArray, frank_wolfe_kwargs=NamedTuple())
     p, stats = dfw.implicit(θ, frank_wolfe_kwargs)
     V = stats.active_set.atoms
-    x = mapreduce(*,+,p,V)
+    x = mapreduce(*, +, p, V)
     return x, stats
 end
 
-function (forward::ForwardFW)(θ::AbstractVector{<:Real}, frank_wolfe_kwargs::NamedTuple)
+function (forward::ForwardFW)(θ::AbstractArray, frank_wolfe_kwargs::NamedTuple)
     f, f_grad1, lmo, alg = forward.f, forward.f_grad1, forward.lmo, forward.alg
     obj(x) = f(x, θ)
     grad!(g, x) = copyto!(g, f_grad1(x, θ))
@@ -84,13 +84,10 @@ function (forward::ForwardFW)(θ::AbstractVector{<:Real}, frank_wolfe_kwargs::Na
 end
 
 function (conditions::ConditionsFW)(
-    θ::AbstractVector{<:Real},
-    p::AbstractVector{<:Real},
-    stats::NamedTuple,
-    frank_wolfe_kwargs::NamedTuple,
+    θ::AbstractArray, p::AbstractVector, stats::NamedTuple, frank_wolfe_kwargs::NamedTuple
 )
     V = stats.active_set.atoms
-    x = mapreduce(*,+,p,V)
+    x = mapreduce(*, +, p, V)
     f_grad1 = conditions.f_grad1
     ∇ₓf = f_grad1(x, θ)
     ∇ₚg = dot.(V, Ref(∇ₓf))
