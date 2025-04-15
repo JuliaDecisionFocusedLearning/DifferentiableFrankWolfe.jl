@@ -66,7 +66,7 @@ Return a couple (x, stats) where `x` is the solution and `stats` is a named tupl
 function (dfw::DiffFW)(θ::AbstractArray, frank_wolfe_kwargs=NamedTuple())
     p, stats = dfw.implicit(θ, frank_wolfe_kwargs)
     V = stats.active_set.atoms
-    x = mapreduce(*, +, p, V)
+    x = mapreduce(*,+,p,V)
     return x, stats
 end
 
@@ -87,7 +87,7 @@ function (conditions::ConditionsFW)(
     θ::AbstractArray, p::AbstractVector, stats::NamedTuple, frank_wolfe_kwargs::NamedTuple
 )
     V = stats.active_set.atoms
-    x = mapreduce(*, +, p, V)
+    x = mapreduce(*,+,p,V)
     f_grad1 = conditions.f_grad1
     ∇ₓf = f_grad1(x, θ)
     ∇ₚg = dot.(V, Ref(∇ₓf))
