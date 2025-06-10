@@ -12,6 +12,8 @@ function simplex_projection(z::AbstractVector{<:Real}; kwargs...)
     return p
 end
 
+relu(x) = max(x, zero(typeof(x)))
+
 """
     simplex_projection_and_support(z)
 
@@ -19,15 +21,15 @@ Compute the Euclidean projection `p` of `z` on the probability simplex as well a
 
 Reference: <https://arxiv.org/abs/1602.02068>.
 """
-function simplex_projection_and_support(z::AbstractVector{<:Real})
+function simplex_projection_and_support(z::AbstractVector{T}) where {T<:Real}
     d = length(z)
     z_sorted = sort(z; rev=true)
     z_sorted_cumsum = cumsum(z_sorted)
-    k = maximum(j for j in 1:d if (1 + j * z_sorted[j]) > z_sorted_cumsum[j])
+    ind_filter = 1 .+ (1:d) .* z_sorted .> z_sorted_cumsum
+    k = findlast(ind_filter)
     τ = (z_sorted_cumsum[k] - 1) / k
-    p = z .- τ
-    p .= max.(p, zero(eltype(p)))
-    s = [Int(p[i] > eps()) for i in 1:d]
+    p = relu.(z .- τ)
+    s = p .> eps(T)
     return p, s
 end
 

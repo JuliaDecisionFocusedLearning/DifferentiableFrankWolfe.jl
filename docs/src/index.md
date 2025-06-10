@@ -1,7 +1,3 @@
-```@meta
-CurrentModule = DifferentiableFrankWolfe
-```
-
 # DifferentiableFrankWolfe
 
 Documentation for [DifferentiableFrankWolfe.jl](https://github.com/gdalle/DifferentiableFrankWolfe.jl).

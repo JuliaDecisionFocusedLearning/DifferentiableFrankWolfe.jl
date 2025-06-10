@@ -1,13 +1,23 @@
 """
     ForwardFW
 
-Underlying solver for [`DiffFW`](@ref), which relies on a variant of Frank-Wolfe.
+Underlying solver for [`DiffFW`](@ref), which relies on a variant of Frank-Wolfe with active set memorization.
 """
 struct ForwardFW{F,G,M,A}
     f::F
     f_grad1::G
     lmo::M
     alg::A
+
+    function ForwardFW(f, f_grad1, lmo, alg)
+        @assert alg in (
+            away_frank_wolfe,
+            blended_conditional_gradient,
+            blended_pairwise_conditional_gradient,
+            pairwise_frank_wolfe,
+        )
+        return new{typeof(f),typeof(f_grad1),typeof(lmo),typeof(alg)}(f, f_grad1, lmo, alg)
+    end
 end
 
 """
@@ -30,7 +40,7 @@ Reference: <https://arxiv.org/abs/2105.15183> (section 2 + end of appendix A).
 
 - `f`: function `f(x, θ)` to minimize wrt `x`
 - `f_grad1`: gradient `∇ₓf(x, θ)` of `f` wrt `x`
-- `lmo`: linear minimization oracle `θ -> argmin_{x ∈ C} θᵀx` from [FrankWolfe.jl], implicitly defines the convex set `C`
+- `lmo`: linear minimization oracle `θ -> argmin_{x ∈ C} θᵀx` from [FrankWolfe.jl](https://github.com/ZIB-IOL/FrankWolfe.jl), implicitly defines the convex set `C`
 - `alg`: optimization algorithm from [FrankWolfe.jl](https://github.com/ZIB-IOL/FrankWolfe.jl)
 - `implicit`: implicit function from [ImplicitDifferentiation.jl](https://github.com/gdalle/ImplicitDifferentiation.jl)
 """
@@ -45,7 +55,7 @@ end
 """
     DiffFW(f, f_grad1, lmo, alg=away_frank_wolfe; implicit_kwargs=(;))
 
-Constructor for [`DiffFW`](@ref) which chooses a default algorithm and creates the implicit function automatically.
+Constructor for [`DiffFW`](@ref) which chooses a default algorithm and creates the implicit function automatically with specific keyword arguments.
 """
 function DiffFW(
     f::F, f_grad1::G, lmo::L, alg::A=away_frank_wolfe; implicit_kwargs=NamedTuple()
@@ -66,7 +76,8 @@ Return a couple (x, stats) where `x` is the solution and `stats` is a named tupl
 function (dfw::DiffFW)(θ::AbstractArray, frank_wolfe_kwargs=NamedTuple())
     p, stats = dfw.implicit(θ, frank_wolfe_kwargs)
     V = stats.active_set.atoms
-    x = mapreduce(*,+,p,V)
+    V_mat = stack(V)
+    x = V_mat * p
     return x, stats
 end
 
@@ -87,10 +98,11 @@ function (conditions::ConditionsFW)(
     θ::AbstractArray, p::AbstractVector, stats::NamedTuple, frank_wolfe_kwargs::NamedTuple
 )
     V = stats.active_set.atoms
-    x = mapreduce(*,+,p,V)
     f_grad1 = conditions.f_grad1
+    V_mat = stack(V)
+    x = V_mat * p
     ∇ₓf = f_grad1(x, θ)
-    ∇ₚg = dot.(V, Ref(∇ₓf))
+    ∇ₚg = transpose(V_mat) * ∇ₓf
     T = simplex_projection(p .- ∇ₚg)
     return T .- p
 end
