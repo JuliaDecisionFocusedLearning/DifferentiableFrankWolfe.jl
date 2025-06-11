@@ -61,6 +61,22 @@ end
         J = Zygote.jacobian(_θ -> dfw(_θ, x0; fwkw...), θ)[1]
         @test all(J .≈ 0)
     end
+
+    @testset "Different sizes" begin
+        using FrankWolfe
+        using Zygote
+
+        f(x, θ) = 0.5 * sum(abs2, x .- sqrt(only(θ)))
+        f_grad1(x, θ) = x .- sqrt(only(θ))
+        lmo = FrankWolfe.ScaledBoundLInfNormBall(zeros(2), ones(2))
+        dfw = DiffFW(f, f_grad1, lmo;)
+        θ = [0.3]
+        x0 = [0.7, 0.5]
+        fwkw = (; max_iteration=1000, epsilon=1e-4)
+        @test dfw(θ, x0; fwkw...) ≈ fill(sqrt(only(θ)), length(x0)) rtol = 1e-4
+        J = Zygote.jacobian(_θ -> dfw(_θ, x0; fwkw...), θ)[1]
+        @test J ≈ fill(0.5 / sqrt(only(θ)), length(x0), 1) rtol = 1e-4
+    end
 end
 
 @testitem "Tutorial" begin
