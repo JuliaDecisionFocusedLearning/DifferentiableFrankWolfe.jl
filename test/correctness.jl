@@ -42,8 +42,10 @@ end
 
         for n in (2, 5, 10), scaling in (0.1, 1, 10)
             θ = scaling .* rand(n)  # outside of the simplex a.s.
-            @test dfw(θ, fwkw) ≈ true_simplex_projection(θ) rtol = 1e-3
-            J = Zygote.jacobian(_θ -> dfw(_θ, fwkw), θ)[1]
+            x0 = zero(θ)
+            x0[1] = 1
+            @test dfw(θ, x0; fwkw...) ≈ true_simplex_projection(θ) rtol = 1e-3
+            J = Zygote.jacobian(_θ -> dfw(_θ, x0; fwkw...), θ)[1]
             J_true = ForwardDiff.jacobian(true_simplex_projection, θ)
             @test J ≈ J_true rtol = 1e-3
         end
@@ -54,8 +56,9 @@ end
         dfw = DiffFWProjection(lmo)
 
         θ = float.(1:5)  # outside of the ball, projected to single atom, no derivative
-        @test dfw(θ, fwkw) ≈ true_ball_projection(θ) rtol = 1e-3
-        J = Zygote.jacobian(_θ -> dfw(_θ, fwkw), θ)[1]
+        x0 = zero(θ)
+        @test dfw(θ, x0; fwkw...) ≈ true_ball_projection(θ) rtol = 1e-3
+        J = Zygote.jacobian(_θ -> dfw(_θ, x0; fwkw...), θ)[1]
         @test all(J .≈ 0)
     end
 end
