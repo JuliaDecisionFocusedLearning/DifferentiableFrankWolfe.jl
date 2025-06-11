@@ -92,16 +92,28 @@ function DiffFW(
 end
 
 """
-    (dfw::DiffFW)(θ::AbstractArray, frank_wolfe_kwargs::NamedTuple)
+    detailed_output(dfw::DiffFW, θ::AbstractArray, frank_wolfe_kwargs::NamedTuple)
 
-Apply the Frank-Wolfe algorithm to `θ` with settings defined by the named tuple `frank_wolfe_kwargs` (given as a positional argument).
+Apply the differentiable Frank-Wolfe algorithm defined by `dfw` to parameter `θ`, with settings defined by the named tuple `frank_wolfe_kwargs` (given as a positional argument).
 
 Return a couple (x, stats) where `x` is the solution and `stats` is a named tuple containing additional information (its contents are not covered by public API, and mostly useful for debugging).
 """
-function (dfw::DiffFW)(θ::AbstractArray, frank_wolfe_kwargs=NamedTuple())
+function detailed_output(dfw::DiffFW, θ::AbstractArray, frank_wolfe_kwargs=NamedTuple())
     p, stats = dfw.implicit(θ, frank_wolfe_kwargs)
     V = stats.active_set.atoms
     V_mat = stack(V)
     x = V_mat * p
     return x, stats
+end
+
+"""
+    (dfw::DiffFW)(θ::AbstractArray, frank_wolfe_kwargs::NamedTuple)
+
+Apply the differentiable Frank-Wolfe algorithm defined by `dfw` to parameter `θ`, with settings defined by the named tuple `frank_wolfe_kwargs` (given as a positional argument).
+
+Return the optimal solution `x`.
+"""
+function (dfw::DiffFW)(θ::AbstractArray, frank_wolfe_kwargs=NamedTuple())
+    x, _ = detailed_output(dfw, θ, frank_wolfe_kwargs)
+    return x
 end

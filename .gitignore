@@ -5,3 +5,4 @@
 /docs/build/
 /docs/Manifest.toml
 /docs/src/tutorial.md
+playground.jl

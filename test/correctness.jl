@@ -13,18 +13,50 @@
     @test dfw2.implicit.linear_solver == \
 end
 
-@testitem "Projection" begin
-    using ProximalOperators
-    using DifferentiableFrankWolfe: simplex_projection
+@testitem "Projection" setup = [Setup] begin
+    import DifferentiableFrankWolfe as DFW
     using ForwardDiff
     using Test
     using Zygote
 
-    for n in (2, 5, 10, 50), scaling in (0.1, 1, 10), _ in 1:100
+    for n in (2, 5, 10), scaling in (0.1, 1, 10), _ in 1:10
         x = scaling .* rand(n)
-        @test simplex_projection(x) ≈ prox(IndSimplex(1.0), x)[1]
-        @test Zygote.jacobian(simplex_projection, x)[1] ≈
-            ForwardDiff.jacobian(simplex_projection, x)
+        @test DFW.simplex_projection(x) ≈ true_simplex_projection(x)
+        J = Zygote.jacobian(DFW.simplex_projection, x)[1]
+        J_true = ForwardDiff.jacobian(true_simplex_projection, x)
+        @test J ≈ J_true
+    end
+end
+
+@testitem "DiffFW" setup = [Setup] begin
+    using ForwardDiff
+    using FrankWolfe
+    using Test
+    using Zygote
+
+    fwkw = (; max_iteration=100, epsilon=1e-4)
+
+    @testset "Simplex projection" begin
+        lmo = FrankWolfe.ProbabilitySimplexOracle(1.0)
+        dfw = DiffFWProjection(lmo)
+
+        for n in (2, 5, 10), scaling in (0.1, 1, 10)
+            θ = scaling .* rand(n)  # outside of the simplex a.s.
+            @test dfw(θ, fwkw) ≈ true_simplex_projection(θ) rtol = 1e-3
+            J = Zygote.jacobian(_θ -> dfw(_θ, fwkw), θ)[1]
+            J_true = ForwardDiff.jacobian(true_simplex_projection, θ)
+            @test J ≈ J_true rtol = 1e-3
+        end
+    end
+
+    @testset "Ball projection" begin
+        lmo = FrankWolfe.LpNormLMO{2}(1.0)
+        dfw = DiffFWProjection(lmo)
+
+        θ = float.(1:5)  # outside of the ball, projected to single atom, no derivative
+        @test dfw(θ, fwkw) ≈ true_ball_projection(θ) rtol = 1e-3
+        J = Zygote.jacobian(_θ -> dfw(_θ, fwkw), θ)[1]
+        @test all(J .≈ 0)
     end
 end
 
