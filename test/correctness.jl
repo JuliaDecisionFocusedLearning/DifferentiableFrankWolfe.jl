@@ -21,7 +21,6 @@ end
 
     for n in (2, 5, 10), scaling in (0.1, 1, 10), _ in 1:10
         x = scaling .* rand(n)
-        @show x
         @test DFW.simplex_projection(x) ≈ true_simplex_projection(x)
         J = Zygote.jacobian(DFW.simplex_projection, x)[1]
         J_true = ForwardDiff.jacobian(true_simplex_projection, x)
@@ -45,6 +44,9 @@ end
             θ = scaling .* rand(n)  # outside of the simplex a.s.
             x0 = zero(θ)
             x0[1] = 1
+            if !isapprox(dfw(θ, x0; fwkw...), true_simplex_projection(θ); rtol=1e-3)
+                @show θ x0
+            end
             @test dfw(θ, x0; fwkw...) ≈ true_simplex_projection(θ) rtol = 1e-3
             J = Zygote.jacobian(_θ -> dfw(_θ, x0; fwkw...), θ)[1]
             J_true = ForwardDiff.jacobian(true_simplex_projection, θ)
