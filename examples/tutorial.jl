@@ -18,9 +18,8 @@ dfw = DiffFW(f, f_grad1, lmo);  # ... is equivalent to a simplex projection if w
 
 # Calling the wrapper
 
-x0 = zeros(5)
-x0[1] = 1
-θ = float.(1:5)
+x0 = ones(3) ./ 3
+θ = [1.0, 1.5, 0.2]
 
 #-
 
