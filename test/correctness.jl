@@ -21,6 +21,7 @@ end
 
     for n in (2, 5, 10), scaling in (0.1, 1, 10), _ in 1:10
         x = scaling .* rand(n)
+        @show x
         @test DFW.simplex_projection(x) ≈ true_simplex_projection(x)
         J = Zygote.jacobian(DFW.simplex_projection, x)[1]
         J_true = ForwardDiff.jacobian(true_simplex_projection, x)
