@@ -5,7 +5,9 @@ Compute the Euclidean projection of the vector `z` onto the probability simplex.
 
 This function is differentiable thanks to a custom chain rule.
 
-Reference: <https://arxiv.org/abs/1602.02068>.
+# References
+
+> [From Softmax to Sparsemax: A Sparse Model of Attention and Multi-Label Classification](https://proceedings.mlr.press/v48/martins16.html), Martins and Astudillo (2016)
 """
 function simplex_projection(z::AbstractVector{<:Real}; kwargs...)
     p, _ = simplex_projection_and_support(z)
@@ -14,13 +16,6 @@ end
 
 relu(x) = max(x, zero(typeof(x)))
 
-"""
-    simplex_projection_and_support(z)
-
-Compute the Euclidean projection `p` of `z` on the probability simplex as well as the indicators `s` of its support, which are useful for differentiation.
-
-Reference: <https://arxiv.org/abs/1602.02068>.
-"""
 function simplex_projection_and_support(z::AbstractVector{T}) where {T<:Real}
     d = length(z)
     z_sorted = sort(z; rev=true)

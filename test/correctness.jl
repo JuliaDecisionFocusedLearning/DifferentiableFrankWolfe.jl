@@ -16,16 +16,15 @@ end
 @testitem "Projection" begin
     using ProximalOperators
     using DifferentiableFrankWolfe: simplex_projection
+    using ForwardDiff
     using Test
     using Zygote
 
-    for n in (2, 5, 10, 50)
-        for _ in 1:10
-            x = rand(n)
-            @test simplex_projection(x) ≈ prox(IndSimplex(1.0), x)[1]
-            @test Zygote.jacobian(simplex_projection, x)[1] ≈
-                ForwardDiff.jacobian(simplex_projection, x)
-        end
+    for n in (2, 5, 10, 50), scaling in (0.1, 1, 10), _ in 1:100
+        x = scaling .* rand(n)
+        @test simplex_projection(x) ≈ prox(IndSimplex(1.0), x)[1]
+        @test Zygote.jacobian(simplex_projection, x)[1] ≈
+            ForwardDiff.jacobian(simplex_projection, x)
     end
 end
 
