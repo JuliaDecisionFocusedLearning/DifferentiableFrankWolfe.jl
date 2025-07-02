@@ -3,7 +3,7 @@
 
 Underlying solver for [`DiffFW`](@ref), which relies on a variant of Frank-Wolfe with active set memorization.
 """
-struct ForwardFW{F,G,M,A}
+struct ForwardFW{F,G,M<:LinearMinimizationOracle,A<:Function}
     f::F
     f_grad1::G
     lmo::M
@@ -24,8 +24,9 @@ function (forward::ForwardFW)(θ::AbstractArray, x0::AbstractArray, frank_wolfe_
     f, f_grad1, lmo, alg = forward.f, forward.f_grad1, forward.lmo, forward.alg
     obj(x) = f(x, θ)
     grad!(g, x) = copyto!(g, f_grad1(x, θ))
+    x0_copy = copy(x0)
     x_final, v_final, primal_value, dual_gap, traj_data, active_set = alg(
-        obj, grad!, lmo, x0; frank_wolfe_kwargs...
+        obj, grad!, lmo, x0_copy; frank_wolfe_kwargs...
     )
     stats = (; x_final, v_final, primal_value, dual_gap, traj_data, active_set)
     p = active_set.weights
@@ -37,8 +38,9 @@ end
 
 Differentiable optimality conditions for [`DiffFW`](@ref), which rely on a custom [`simplex_projection`](@ref) implementation.
 """
-struct ConditionsFW{G}
+struct ConditionsFW{G,S}
     f_grad1::G
+    step_size::S
 end
 
 function (conditions::ConditionsFW)(
@@ -48,13 +50,14 @@ function (conditions::ConditionsFW)(
     _x0::AbstractArray,
     _frank_wolfe_kwargs,
 )
+    (; f_grad1, step_size) = conditions
     V = stats.active_set.atoms
-    f_grad1 = conditions.f_grad1
     V_mat = stack(V)
     x = V_mat * p
     ∇ₓf = f_grad1(x, θ)
     ∇ₚg = transpose(V_mat) * ∇ₓf
-    T = simplex_projection(p .- ∇ₚg)
+    p_grad_step = p .- convert(eltype(p), step_size) .* ∇ₚg
+    T = simplex_projection(p_grad_step)
     return T .- p
 end
 
@@ -66,33 +69,35 @@ The solution routine can be differentiated implicitly with respect `θ`, but not
 
 # Constructor
 
-    DiffFW(f, f_grad1, lmo, alg=away_frank_wolfe; implicit_kwargs=(;))
+    DiffFW(f, f_grad1, lmo, alg=away_frank_wolfe; step_size=1, implicit_kwargs=(;))
 
 - `f`: function `f(x, θ)` to minimize with respect to `x`
 - `f_grad1`: gradient `∇ₓf(x, θ)` of `f` with respect to `x`
 - `lmo`: linear minimization oracle `θ -> argmin_{x ∈ C} θᵀx` from [FrankWolfe.jl](https://github.com/ZIB-IOL/FrankWolfe.jl), implicitly defines the convex set `C`
 - `alg`: optimization algorithm from [FrankWolfe.jl](https://github.com/ZIB-IOL/FrankWolfe.jl), must return an `active_set`
+- `step_size`: positive value used to scale the gradient in the Frank-Wolfe optimality condition framed as projected gradient stationarity
 - `implicit_kwargs`: keyword arguments passed to the `ImplicitFunction` object from [ImplicitDifferentiation.jl](https://github.com/gdalle/ImplicitDifferentiation.jl)
 
 # References
 
 > [Efficient and Modular Implicit Differentiation](https://proceedings.neurips.cc/paper_files/paper/2022/hash/228b9279ecf9bbafe582406850c57115-Abstract-Conference.html), Blondel et al. (2022)
 """
-struct DiffFW{F,G,M<:LinearMinimizationOracle,A,I<:ImplicitFunction}
-    f::F
-    f_grad1::G
-    lmo::M
-    alg::A
+struct DiffFW{I<:ImplicitFunction}
     implicit::I
 end
 
 function DiffFW(
-    f::F, f_grad1::G, lmo::L, alg::A=away_frank_wolfe; implicit_kwargs=NamedTuple()
-) where {F,G,L,A}
+    f::F,
+    f_grad1::G,
+    lmo::LinearMinimizationOracle,
+    alg::A=away_frank_wolfe;
+    step_size=1,
+    implicit_kwargs=(;),
+) where {F,G,A}
     forward = ForwardFW(f, f_grad1, lmo, alg)
-    conditions = ConditionsFW(f_grad1)
+    conditions = ConditionsFW(f_grad1, step_size)
     implicit = ImplicitFunction(forward, conditions; implicit_kwargs...)
-    return DiffFW(f, f_grad1, lmo, alg, implicit)
+    return DiffFW(implicit)
 end
 
 """
