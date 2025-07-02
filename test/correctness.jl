@@ -9,7 +9,7 @@
     @test dfw1.implicit.linear_solver != \
 
     implicit_kwargs = (; linear_solver=\)
-    dfw2 = DiffFW(f, f_grad1, lmo; implicit_kwargs...)
+    dfw2 = DiffFW(f, f_grad1, lmo; implicit_kwargs)
     @test dfw2.implicit.linear_solver == \
 end
 

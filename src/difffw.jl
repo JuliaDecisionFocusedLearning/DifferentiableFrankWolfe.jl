@@ -55,7 +55,8 @@ function (conditions::ConditionsFW)(
     x = V_mat * p
     ∇ₓf = f_grad1(x, θ)
     ∇ₚg = transpose(V_mat) * ∇ₓf
-    T = simplex_projection(p .- ∇ₚg)
+    # TODO: parametrize
+    T = simplex_projection(p .- eltype(p)(1e-3) .* ∇ₚg / norm(∇ₚg))
     return T .- p
 end
 
@@ -67,7 +68,7 @@ The solution routine can be differentiated implicitly with respect `θ`, but not
 
 # Constructor
 
-    DiffFW(f, f_grad1, lmo, alg=away_frank_wolfe; implicit_kwargs...)
+    DiffFW(f, f_grad1, lmo, alg=away_frank_wolfe; implicit_kwargs)
 
 - `f`: function `f(x, θ)` to minimize with respect to `x`
 - `f_grad1`: gradient `∇ₓf(x, θ)` of `f` with respect to `x`
@@ -88,7 +89,7 @@ struct DiffFW{F,G,M<:LinearMinimizationOracle,A,I<:ImplicitFunction}
 end
 
 function DiffFW(
-    f::F, f_grad1::G, lmo::L, alg::A=away_frank_wolfe; implicit_kwargs...
+    f::F, f_grad1::G, lmo::L, alg::A=away_frank_wolfe; implicit_kwargs
 ) where {F,G,L,A}
     forward = ForwardFW(f, f_grad1, lmo, alg)
     conditions = ConditionsFW(f_grad1)

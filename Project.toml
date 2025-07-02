@@ -12,7 +12,7 @@ LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 [compat]
 ChainRulesCore = "1.15"
 FrankWolfe = "0.5"
-ImplicitDifferentiation = "0.9"
+ImplicitDifferentiation = "0.8,0.9"
 LinearAlgebra = "1"
 julia = "1.10"
 
@@ -53,6 +53,3 @@ test = [
     "TestItemRunner",
     "Zygote",
 ]
-
-[sources]
-ImplicitDifferentiation = { url = "https://github.com/JuliaDecisionFocusedLearning/ImplicitDifferentiation.jl", rev = "gd/krylovkit" }

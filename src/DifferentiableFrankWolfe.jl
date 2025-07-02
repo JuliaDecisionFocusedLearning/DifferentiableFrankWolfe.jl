@@ -14,7 +14,7 @@ using FrankWolfe:
     compute_extreme_point,
     pairwise_frank_wolfe
 using ImplicitDifferentiation: ImplicitFunction
-using LinearAlgebra: dot
+using LinearAlgebra: dot, norm
 
 export DiffFW
 
