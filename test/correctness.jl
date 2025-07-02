@@ -9,7 +9,7 @@
     @test dfw1.implicit.linear_solver != \
 
     implicit_kwargs = (; linear_solver=\)
-    dfw2 = DiffFW(f, f_grad1, lmo; implicit_kwargs)
+    dfw2 = DiffFW(f, f_grad1, lmo; implicit_kwargs...)
     @test dfw2.implicit.linear_solver == \
 end
 
@@ -70,7 +70,7 @@ end
         f(x, θ) = 0.5 * sum(abs2, x .- sqrt(only(θ)))
         f_grad1(x, θ) = x .- sqrt(only(θ))
         lmo = FrankWolfe.ScaledBoundLInfNormBall(zeros(2), ones(2))
-        dfw = DiffFW(f, f_grad1, lmo;)
+        dfw = DiffFW(f, f_grad1, lmo)
         θ = [0.3]
         x0 = [0.7, 0.5]
         fwkw = (; max_iteration=1000, epsilon=1e-4)
