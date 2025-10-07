@@ -11,7 +11,7 @@ LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 
 [compat]
 ChainRulesCore = "1.15"
-FrankWolfe = "0.5"
+FrankWolfe = "0.5, 0.6"
 ImplicitDifferentiation = "0.8,0.9"
 LinearAlgebra = "1"
 julia = "1.10"
@@ -35,21 +35,4 @@ TestItems = "1c621080-faea-4a02-84b6-bbd5e436b8fe"
 Zygote = "e88e6eb3-aa80-5325-afca-941959d7151f"
 
 [targets]
-test = [
-    "Aqua",
-    "ChainRulesCore",
-    "Documenter",
-    "ForwardDiff",
-    "FrankWolfe",
-    "ImplicitDifferentiation",
-    "JET",
-    "JuliaFormatter",
-    "ProximalOperators",
-    "Random",
-    "StableRNGs",
-    "Statistics",
-    "Test",
-    "TestItems",
-    "TestItemRunner",
-    "Zygote",
-]
+test = ["Aqua", "ChainRulesCore", "Documenter", "ForwardDiff", "FrankWolfe", "ImplicitDifferentiation", "JET", "JuliaFormatter", "ProximalOperators", "Random", "StableRNGs", "Statistics", "Test", "TestItems", "TestItemRunner", "Zygote"]
