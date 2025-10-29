@@ -16,9 +16,9 @@ end
 
 relu(x) = max(x, zero(typeof(x)))
 
-function simplex_projection_and_support(z::AbstractVector{T}) where {T<:Real}
+function simplex_projection_and_support(z::AbstractVector{T}) where {T <: Real}
     d = length(z)
-    z_sorted = sort(z; rev=true)
+    z_sorted = sort(z; rev = true)
     z_sorted_cumsum = cumsum(z_sorted)
     ind_filter = 1 .+ (1:d) .* z_sorted .> z_sorted_cumsum
     k = findlast(ind_filter)

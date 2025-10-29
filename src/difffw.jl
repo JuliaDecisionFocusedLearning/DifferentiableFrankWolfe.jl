@@ -3,7 +3,7 @@
 
 Underlying solver for [`DiffFW`](@ref), which relies on a variant of Frank-Wolfe with active set memorization.
 """
-struct ForwardFW{F,G,M<:LinearMinimizationOracle,A<:Function}
+struct ForwardFW{F, G, M <: LinearMinimizationOracle, A <: Function}
     f::F
     f_grad1::G
     lmo::M
@@ -16,7 +16,7 @@ struct ForwardFW{F,G,M<:LinearMinimizationOracle,A<:Function}
             blended_pairwise_conditional_gradient,
             pairwise_frank_wolfe,
         )
-        return new{typeof(f),typeof(f_grad1),typeof(lmo),typeof(alg)}(f, f_grad1, lmo, alg)
+        return new{typeof(f), typeof(f_grad1), typeof(lmo), typeof(alg)}(f, f_grad1, lmo, alg)
     end
 end
 
@@ -25,11 +25,8 @@ function (forward::ForwardFW)(θ::AbstractArray, x0::AbstractArray, frank_wolfe_
     obj(x) = f(x, θ)
     grad!(g, x) = copyto!(g, f_grad1(x, θ))
     x0_copy = copy(x0)
-    x_final, v_final, primal_value, dual_gap, traj_data, active_set = alg(
-        obj, grad!, lmo, x0_copy; frank_wolfe_kwargs...
-    )
-    stats = (; x_final, v_final, primal_value, dual_gap, traj_data, active_set)
-    p = active_set.weights
+    stats = alg(obj, grad!, lmo, x0_copy; frank_wolfe_kwargs...)
+    p = stats.active_set.weights
     return p, stats
 end
 
@@ -38,18 +35,18 @@ end
 
 Differentiable optimality conditions for [`DiffFW`](@ref), which rely on a custom [`simplex_projection`](@ref) implementation.
 """
-struct ConditionsFW{G,S}
+struct ConditionsFW{G, S}
     f_grad1::G
     step_size::S
 end
 
 function (conditions::ConditionsFW)(
-    θ::AbstractArray,
-    p::AbstractVector,
-    stats::NamedTuple,
-    _x0::AbstractArray,
-    _frank_wolfe_kwargs,
-)
+        θ::AbstractArray,
+        p::AbstractVector,
+        stats::NamedTuple,
+        _x0::AbstractArray,
+        _frank_wolfe_kwargs,
+    )
     (; f_grad1, step_size) = conditions
     V = stats.active_set.atoms
     V_mat = stack(V)
@@ -82,18 +79,18 @@ The solution routine can be differentiated implicitly with respect `θ`, but not
 
 > [Efficient and Modular Implicit Differentiation](https://proceedings.neurips.cc/paper_files/paper/2022/hash/228b9279ecf9bbafe582406850c57115-Abstract-Conference.html), Blondel et al. (2022)
 """
-struct DiffFW{I<:ImplicitFunction}
+struct DiffFW{I <: ImplicitFunction}
     implicit::I
 end
 
 function DiffFW(
-    f::F,
-    f_grad1::G,
-    lmo::LinearMinimizationOracle,
-    alg::A=away_frank_wolfe;
-    step_size=1,
-    implicit_kwargs=(;),
-) where {F,G,A}
+        f::F,
+        f_grad1::G,
+        lmo::LinearMinimizationOracle,
+        alg::A = away_frank_wolfe;
+        step_size = 1,
+        implicit_kwargs = (;),
+    ) where {F, G, A}
     forward = ForwardFW(f, f_grad1, lmo, alg)
     conditions = ConditionsFW(f_grad1, step_size)
     implicit = ImplicitFunction(forward, conditions; implicit_kwargs...)
