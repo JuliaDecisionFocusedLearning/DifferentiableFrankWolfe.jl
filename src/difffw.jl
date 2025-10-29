@@ -25,11 +25,8 @@ function (forward::ForwardFW)(θ::AbstractArray, x0::AbstractArray, frank_wolfe_
     obj(x) = f(x, θ)
     grad!(g, x) = copyto!(g, f_grad1(x, θ))
     x0_copy = copy(x0)
-    x_final, v_final, primal_value, dual_gap, traj_data, active_set = alg(
-        obj, grad!, lmo, x0_copy; frank_wolfe_kwargs...
-    )
-    stats = (; x_final, v_final, primal_value, dual_gap, traj_data, active_set)
-    p = active_set.weights
+    stats = alg(obj, grad!, lmo, x0_copy; frank_wolfe_kwargs...)
+    p = stats.active_set.weights
     return p, stats
 end
 

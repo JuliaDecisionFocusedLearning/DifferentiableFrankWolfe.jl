@@ -54,7 +54,7 @@ end
     end
 
     @testset "Ball projection" begin
-        lmo = FrankWolfe.LpNormLMO{2}(1.0)
+        lmo = FrankWolfe.LpNormBallLMO{2}(1.0)
         dfw = DiffFWProjection(lmo)
 
         θ = float.(1:5)  # outside of the ball, projected to single atom, no derivative
@@ -72,7 +72,7 @@ end
 
         f(x, θ) = 0.5 * sum(abs2, x .- sqrt.(vcat(θ, sum(θ))))
         f_grad1(x, θ) = x .^ 2 .- vcat(θ, sum(θ))
-        lmo = FrankWolfe.ScaledBoundLInfNormBall(zeros(3), ones(3))
+        lmo = FrankWolfe.BoxLMO(zeros(3), ones(3))
         dfw = DiffFW(f, f_grad1, lmo; step_size = 1)
         θ = [0.3, 0.2]
         x0 = [0.7, 0.5, 0.9]
