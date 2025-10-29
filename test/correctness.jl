@@ -1,16 +1,17 @@
 @testitem "Constructor" begin
     using FrankWolfe
+    using ImplicitDifferentiation
 
     f(x, θ) = 0.5 * sum(abs2, x - θ)
     f_grad1(x, θ) = x - θ
     lmo = FrankWolfe.UnitSimplexLMO(1.0)
 
     dfw1 = DiffFW(f, f_grad1, lmo)
-    @test dfw1.implicit.linear_solver != \
+    @test !isa(dfw1.implicit.linear_solver, DirectLinearSolver)
 
-    implicit_kwargs = (; linear_solver = \)
+    implicit_kwargs = (; linear_solver = DirectLinearSolver())
     dfw2 = DiffFW(f, f_grad1, lmo; implicit_kwargs)
-    @test dfw2.implicit.linear_solver == \
+    @test dfw2.implicit.linear_solver isa DirectLinearSolver
 end
 
 @testitem "Projection" setup = [Setup] begin
