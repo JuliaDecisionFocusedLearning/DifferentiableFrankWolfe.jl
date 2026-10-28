@@ -52,3 +52,22 @@ jobs:
             using DifferentiableFrankWolfe
             DocMeta.setdocmeta!(DifferentiableFrankWolfe, :DocTestSetup, :(using DifferentiableFrankWolfe); recursive=true)
             doctest(DifferentiableFrankWolfe)'
+
+  jet:
+    name: JET
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: julia-actions/setup-julia@v3
+        with:
+          version: '1'
+      - uses: julia-actions/cache@v3
+      - name: Run JET.test_package
+        shell: julia --color=yes {0}
+        run: |
+          using Pkg
+          Pkg.activate(; temp=true)
+          Pkg.develop(; path=".")
+          Pkg.add("JET")
+          using JET, DifferentiableFrankWolfe
+          JET.test_package(DifferentiableFrankWolfe; target_modules=(DifferentiableFrankWolfe,))

@@ -23,7 +23,6 @@ Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
 FrankWolfe = "f55ce6ea-fdc5-4628-88c5-0087fe54bd30"
 ImplicitDifferentiation = "57b37032-215b-411a-8a7c-41a003a55207"
-JET = "c3a54625-cd67-489e-a8e7-0a5a0ff4e31b"
 ProximalOperators = "a725b495-10eb-56fe-b38b-717eba820537"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 StableRNGs = "860ef19b-820b-49d6-a774-d7a799459cd3"
@@ -41,7 +40,6 @@ test = [
     "ForwardDiff",
     "FrankWolfe",
     "ImplicitDifferentiation",
-    "JET",
     "ProximalOperators",
     "Random",
     "StableRNGs",
