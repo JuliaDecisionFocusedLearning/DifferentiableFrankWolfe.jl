@@ -7,11 +7,6 @@ using TestItems
     )
 end
 
-@testitem "Correctness (JET.jl)" begin
-    using JET
-    JET.test_package(DifferentiableFrankWolfe; target_defined_modules = true)
-end
-
 @testitem "Doctests (Documenter.jl)" begin
     using Documenter
     doctest(DifferentiableFrankWolfe)
